@@ -22977,8 +22977,8 @@
     ], function (angular, app) {
         'use strict';
 
-        app.factory('bzSessionFactory', ['$resource', 'bzConfig', '$cookieStore', '$q', '$log', 'jwtInterceptor', '$sessionStorage',
-            function ($resource, config, $cookieStore, $q, $log, jwtInterceptor, $sessionStorage) {
+        app.factory('bzSessionFactory', ['$resource', 'bzConfig', '$cookieStore', '$q', '$log', 'jwtInterceptor', '$localStorage',
+            function ($resource, config, $cookieStore, $q, $log, jwtInterceptor, $localStorage) {
                 var sessionObject = $resource(config.resource('/auth/session'), {}, {
                         'renew': { method: 'PUT' },
                         'changeRole': { method: 'PUT', params: {'action': 'changeRole'} },
@@ -23036,16 +23036,16 @@
                 };
 
 
-                $log.debug('Session in sessionStorage:', $sessionStorage.baAuthUser);
+                $log.debug('Session in localStorage:', $localStorage.baAuthUser);
 
-                $session = new sessionObject($sessionStorage.baAuthUser || angular.copy(guestData));
+                $session = new sessionObject($localStorage.baAuthUser || angular.copy(guestData));
 
                 $session.$change(function () {
                     if ($session.jwt_token) {
                         $log.info('Set JWT token: ' + $session.jwt_token);
                         jwtInterceptor.setToken($session.jwt_token);
                     }
-                    $sessionStorage.baAuthUser = $session;
+                    $localStorage.baAuthUser = $session;
                 });
                 return $session;
             }]);

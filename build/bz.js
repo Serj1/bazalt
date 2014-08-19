@@ -4748,7 +4748,7 @@ var requirejs, require, define;
         }])
     }), define("bz/factories/bzSessionFactory", ["angular", "bz/app", "bz/providers/bzConfig"], function (a, b) {
         "use strict";
-        b.factory("bzSessionFactory", ["$resource", "bzConfig", "$cookieStore", "$q", "$log", "jwtInterceptor", "$sessionStorage", function (b, c, d, e, f, g, h) {
+        b.factory("bzSessionFactory", ["$resource", "bzConfig", "$cookieStore", "$q", "$log", "jwtInterceptor", "$localStorage", function (b, c, d, e, f, g, h) {
             var i, j = b(c.resource("/auth/session"), {}, {renew: {method: "PUT"}, changeRole: {method: "PUT", params: {action: "changeRole"}}, $login: {method: "POST"}, $logout: {method: "DELETE"}}), k = e.defer(), l = {is_guest: !0, permissions: ["guest"]};
             return j.prototype.$login = function (b, c, d) {
                 j.$login(b, function (b) {
@@ -4775,7 +4775,7 @@ var requirejs, require, define;
             }, j.prototype.has = function (b) {
                 var c = this.permissions || [];
                 return a.isArray(b) || (b = [b]), !b.diff(c).length
-            }, f.debug("Session in sessionStorage:", h.baAuthUser), i = new j(h.baAuthUser || a.copy(l)), i.$change(function () {
+            }, f.debug("Session in localStorage:", h.baAuthUser), i = new j(h.baAuthUser || a.copy(l)), i.$change(function () {
                 i.jwt_token && (f.info("Set JWT token: " + i.jwt_token), g.setToken(i.jwt_token)), h.baAuthUser = i
             }), i
         }])

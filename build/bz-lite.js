@@ -1,36 +1,9 @@
 !function () {
-    "use strict";
-    !function () {
-        function a(a) {
-            return["$rootScope", "$window", function (b, c) {
-                for (var d, e, f, g = c[a] || (console.warn("This browser does not support Web Storage!"), {}), h = {$default: function (a) {
-                    for (var b in a)angular.isDefined(h[b]) || (h[b] = a[b]);
-                    return h
-                }, $reset: function (a) {
-                    for (var b in h)"$" === b[0] || delete h[b];
-                    return h.$default(a)
-                }}, i = 0; i < g.length; i++)(f = g.key(i)) && "ngStorage-" === f.slice(0, 10) && (h[f.slice(10)] = angular.fromJson(g.getItem(f)));
-                return d = angular.copy(h), b.$watch(function () {
-                    e || (e = setTimeout(function () {
-                        if (e = null, !angular.equals(h, d)) {
-                            angular.forEach(h, function (a, b) {
-                                angular.isDefined(a) && "$" !== b[0] && g.setItem("ngStorage-" + b, angular.toJson(a)), delete d[b]
-                            });
-                            for (var a in d)g.removeItem("ngStorage-" + a);
-                            d = angular.copy(h)
-                        }
-                    }, 100))
-                }), "localStorage" === a && c.addEventListener && c.addEventListener("storage", function (a) {
-                    "ngStorage-" === a.key.slice(0, 10) && (a.newValue ? h[a.key.slice(10)] = angular.fromJson(a.newValue) : delete h[a.key.slice(10)], d = angular.copy(h), b.$apply())
-                }), h
-            }]
-        }
-
-        angular.module("ngStorage", []).factory("$localStorage", a("localStorage")).factory("$sessionStorage", a("sessionStorage"))
-    }(), define("ngstorage", ["angular"], function () {
-    }), define("bz/app", ["angular", "angular-resource", "angular-route", "angular-cookies", "angular-route-segment", "ngstorage"], function (a) {
+    define("bz/app", ["angular", "angular-resource", "angular-route", "angular-cookies", "angular-route-segment", "ngstorage"], function (a) {
+        "use strict";
         return a.module("bz", ["ngResource", "ngRoute", "ngCookies", "ngLocale", "route-segment", "view-segment", "ngStorage"])
     }), define("bz/factories/bzInterceptorBuffer", ["bz/app"], function (a) {
+        "use strict";
         a.factory("bzInterceptorBuffer", ["$injector", function (a) {
             function b(b, d) {
                 function e(a) {
@@ -53,6 +26,7 @@
             }}
         }])
     }), define("bz/interceptors/status403", ["angular", "bz/app", "bz/factories/bzInterceptorBuffer"], function () {
+        "use strict";
         return["$rootScope", "$q", "bzInterceptorBuffer", function (a, b, c) {
             function d(a) {
                 return a
@@ -76,6 +50,7 @@
             }
         }]
     }), define("bz/interceptors/jwtInterceptor", ["angular", "bz/app"], function (a, b) {
+        "use strict";
         b.factory("jwtInterceptor", ["$rootScope", "$q", "$window", "$cookieStore", function (b, c, d, e) {
             var f = d.localStorage ? function (a, b) {
                 d.localStorage[a] = b
@@ -98,6 +73,7 @@
             a.interceptors.push("jwtInterceptor")
         }])
     }), define("bz/providers/bzConfig", ["angular", "bz/app"], function (a, b) {
+        "use strict";
         b.provider("bzConfig", [function () {
             var b = {api: "/api/v1", templatePrefix: "", languages: ["en"], checkSessionOnStart: !1, errorTemplates: {403: "views/error/403.html", 404: "views/error/404.html"}};
             this.errorResolver = function () {
@@ -136,6 +112,7 @@
             }]
         }])
     }), define("bz/providers/bzLanguage", ["angular", "bz/app", "bz/providers/bzConfig"], function (a, b) {
+        "use strict";
         b.provider("bzLanguage", ["$localeProvider", function (b) {
             this.$language = b.$get().id.substring(0, 2), this.id = function (a) {
                 return this.$language = a, this
@@ -152,7 +129,8 @@
             }]
         }])
     }), define("bz/factories/bzSessionFactory", ["angular", "bz/app", "bz/providers/bzConfig"], function (a, b) {
-        b.factory("bzSessionFactory", ["$resource", "bzConfig", "$cookieStore", "$q", "$log", "jwtInterceptor", "$sessionStorage", function (b, c, d, e, f, g, h) {
+        "use strict";
+        b.factory("bzSessionFactory", ["$resource", "bzConfig", "$cookieStore", "$q", "$log", "jwtInterceptor", "$localStorage", function (b, c, d, e, f, g, h) {
             var i, j = b(c.resource("/auth/session"), {}, {renew: {method: "PUT"}, changeRole: {method: "PUT", params: {action: "changeRole"}}, $login: {method: "POST"}, $logout: {method: "DELETE"}}), k = e.defer(), l = {is_guest: !0, permissions: ["guest"]};
             return j.prototype.$login = function (b, c, d) {
                 j.$login(b, function (b) {
@@ -179,11 +157,12 @@
             }, j.prototype.has = function (b) {
                 var c = this.permissions || [];
                 return a.isArray(b) || (b = [b]), !b.diff(c).length
-            }, f.debug("Session in sessionStorage:", h.baAuthUser), i = new j(h.baAuthUser || a.copy(l)), i.$change(function () {
+            }, f.debug("Session in localStorage:", h.baAuthUser), i = new j(h.baAuthUser || a.copy(l)), i.$change(function () {
                 i.jwt_token && (f.info("Set JWT token: " + i.jwt_token), g.setToken(i.jwt_token)), h.baAuthUser = i
             }), i
         }])
     }), define("bz/helpers/filter", [], function () {
+        "use strict";
         Array.prototype.filter || (Array.prototype.filter = function (a) {
             var b = [];
             a = a || function () {
@@ -192,18 +171,21 @@
             return b
         })
     }), define("bz/helpers/indexOf", [], function () {
+        "use strict";
         Array.prototype.indexOf || (Array.prototype.indexOf = function (a, b) {
             null == b ? b = 0 : 0 > b && (b = Math.max(0, this.length + b));
             for (var c = b, d = this.length; d > c; c++)if (this[c] === a)return c;
             return-1
         })
     }), define("bz/helpers/diff", ["bz/helpers/filter", "bz/helpers/indexOf"], function () {
+        "use strict";
         Array.prototype.diff || (Array.prototype.diff = function (a) {
             return this.filter(function (b) {
                 return!(a.indexOf(b) > -1)
             })
         })
     }), define("bz/providers/bzUser", ["angular", "bz/app", "bz/factories/bzSessionFactory", "bz/helpers/diff"], function (a, b) {
+        "use strict";
         b.provider("bzUser", [function () {
             this.access = function () {
                 var a = arguments;
@@ -278,6 +260,7 @@
             }
         }])
     }), define("bz/filters/language", ["bz/app", "bz/providers/bzLanguage"], function (a) {
+        "use strict";
         a.filter("language", ["bzLanguage", function (a) {
             return function (b, c) {
                 return"undefined" == typeof b || null === b ? b : (c = c || a.id(), !b[c] && b.orig ? b[b.orig] : b[c] || null)
