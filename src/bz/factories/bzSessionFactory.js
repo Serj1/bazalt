@@ -60,16 +60,18 @@ define([
             }
             return !permission.diff(permissions).length;
         };
-        $log.debug('Session in cookie:', $cookieStore.get('baAuthUser'));
+        
 
-        $session = new sessionObject($cookieStore.get('baAuthUser') || angular.copy(guestData));
+        $log.debug('Session in sessionStorage:', $sessionStorage.baAuthUse);
+
+        $session = new sessionObject($sessionStorage.baAuthUser || angular.copy(guestData));
+        
         $session.$change(function() {
             if ($session.jwt_token) {
                 $log.info('Set JWT token: ' + $session.jwt_token);
                 jwtInterceptor.setToken($session.jwt_token);
             }
-            $log.debug('Set session cookie:', $session);
-            $cookieStore.put('baAuthUser', $session);
+          $sessionStorage.baAuthUser = $session;
         });
         return $session;
     }]);
