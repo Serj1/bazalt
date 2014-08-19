@@ -10,6 +10,6 @@ define([
     return angular.module('bz', [
         'ngResource', 'ngRoute', 'ngCookies', 'ngLocale',
 
-        'route-segment', 'view-segment'
+        'route-segment', 'view-segment', 'ngstorage'
     ]);
 });
