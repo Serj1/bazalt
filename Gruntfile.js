@@ -25,8 +25,8 @@ module.exports = function(grunt) {
                 wrap: true,
                 mainConfigFile: 'src/config.js',
                 onBuildWrite: function(moduleName, path, contents) {
-                    return contents.replace(/define\('bz\/run'/g, "define('bz'")
-                                   .replace(/define\('bz.(.*)\/run'/g, "define('bz/$1'");
+                    return contents.replace(/define\('bz\/run'/g, "define('bz'");
+//                                   .replace(/define\('bz.(.*)\/run'/g, "define('bz/$1'");
                 }
             }
         },
