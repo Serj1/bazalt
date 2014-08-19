@@ -62,7 +62,7 @@ define([
         };
         
 
-        $log.debug('Session in sessionStorage:', $sessionStorage.baAuthUse);
+        $log.debug('Session in sessionStorage:', $sessionStorage.baAuthUser);
 
         $session = new sessionObject($sessionStorage.baAuthUser || angular.copy(guestData));
         
