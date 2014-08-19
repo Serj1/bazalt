@@ -3,8 +3,8 @@ define([
 ], function(angular, app) {
     'use strict';
 
-    app.factory('bzSessionFactory', ['$resource', 'bzConfig', '$cookieStore', '$q', '$log', 'jwtInterceptor',
-    function ($resource, config, $cookieStore, $q, $log, jwtInterceptor) {
+    app.factory('bzSessionFactory', ['$resource', 'bzConfig', '$cookieStore', '$q', '$log', 'jwtInterceptor','$sessionStorage',
+    function ($resource, config, $cookieStore, $q, $log, jwtInterceptor, $sessionStorage) {
         var sessionObject = $resource(config.resource('/auth/session'), {}, {
             'renew':    { method: 'PUT' },
             'changeRole':    { method: 'PUT', params: {'action': 'changeRole'} },
