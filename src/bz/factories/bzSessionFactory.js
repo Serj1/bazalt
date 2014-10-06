@@ -22,13 +22,10 @@ define([
             }, error);
         };
         sessionObject.prototype.$logout = function(callback, error) {
-            sessionObject.$logout({}, function(data) {
-                data = angular.copy(guestData);
-                $session.$set(data);
-                jwtInterceptor.setToken(undefined);
-                callback = callback || angular.noop;
-                callback($session);
-            }, error);
+            $session.$set(angular.copy(guestData));
+            jwtInterceptor.setToken(undefined);
+            callback = callback || angular.noop;
+            callback($session);
         };
         sessionObject.prototype.$set = function(data) {
             var oldSession = angular.copy($session);
