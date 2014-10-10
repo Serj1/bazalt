@@ -135,6 +135,9 @@
                     }
                     return response || $q.when(response);
                 },
+                getToken: function() {
+                    return getItem('token');
+                },
                 setToken: function (token) {
                     setItem('token', token);
                 }
@@ -289,14 +292,11 @@
                         callback($session);
                     }, error);
                 };
-                sessionObject.prototype.$logout = function (callback, error) {
-                    sessionObject.$logout({}, function (data) {
-                        data = angular.copy(guestData);
-                        $session.$set(data);
-                        jwtInterceptor.setToken(undefined);
-                        callback = callback || angular.noop;
-                        callback($session);
-                    }, error);
+                sessionObject.prototype.$logout = function(callback, error) {
+                    $session.$set(angular.copy(guestData));
+                    jwtInterceptor.setToken(undefined);
+                    callback = callback || angular.noop;
+                    callback($session);
                 };
                 sessionObject.prototype.$set = function (data) {
                     var oldSession = angular.copy($session);
