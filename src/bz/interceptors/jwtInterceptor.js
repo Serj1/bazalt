@@ -29,6 +29,9 @@ define([
                 }
                 return response || $q.when(response);
             },
+            getToken: function() {
+                return getItem('token');
+            },
             setToken: function(token) {
                 setItem('token', token);
             }
