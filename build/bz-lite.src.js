@@ -279,13 +279,21 @@
                 var sessionObject = $resource(config.resource('/auth/session'), {}, {
                         'renew': { method: 'PUT' },
                         'changeRole': { method: 'PUT', params: {'action': 'changeRole'} },
+                        '$oauthLogin': { method: 'POST', params: {'action': 'oauth'} },
                         '$login': { method: 'POST' },
                         '$logout': { method: 'DELETE' }
                     }), defer = $q.defer(),
                     $session,
                     guestData = { is_guest: true, permissions: ['guest'] };
 
-                sessionObject.prototype.$login = function (data, callback, error) {
+                sessionObject.prototype.$oauthLogin = function (data, callback, error) {
+                    sessionObject.$oauthLogin(data, function (result) {
+                        $session.$set(result);
+                        callback = callback || angular.noop;
+                        callback($session);
+                    }, error);
+                };
+                 sessionObject.prototype.$login = function (data, callback, error) {
                     sessionObject.$login(data, function (result) {
                         $session.$set(result);
                         callback = callback || angular.noop;
