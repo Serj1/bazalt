@@ -647,14 +647,26 @@
         return app;
     });
     define('bz/filters/translate', ['bz/app'], function (app) {
-
+        var strings = {};
         app.filter('translate', ['$rootScope', function ($rootScope) {
             return function (string) {
                 var translateBundle = $rootScope.$localeBundle || {};
+                if (window.bazalt.trackNotTranslated != undefined && $rootScope.$localeBundle && translateBundle[string] == undefined) {
+                    if(strings[string] == undefined){
+                        strings[string] = string;
+                        $http({
+                            url: '/api/rest.php/translates?action=save-with-translate',
+                            method: 'PUT',
+                            data: {
+                                new_words:strings[string]
+                            }
+                        });
+                    }
+                }
+
                 return translateBundle[string] || string;
             };
         }]);
-
     });
     define('bz/filters/language', [
         'bz/app',
