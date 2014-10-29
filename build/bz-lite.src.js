@@ -648,7 +648,7 @@
     });
     define('bz/filters/translate', ['bz/app'], function (app) {
         var strings = {};
-        app.filter('translate', ['$rootScope', function ($rootScope) {
+        app.filter('translate', ['$rootScope', '$http', function ($rootScope, $http) {
             return function (string) {
                 var translateBundle = $rootScope.$localeBundle || {};
                 if (window.bazalt.trackNotTranslated != undefined && $rootScope.$localeBundle && translateBundle[string] == undefined) {
