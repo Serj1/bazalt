@@ -648,19 +648,30 @@
     });
     define('bz/filters/translate', ['bz/app'], function (app) {
         var strings = {};
+        var trTimers = {};
         app.filter('translate', ['$rootScope', '$http', function ($rootScope, $http) {
             return function (string) {
                 var translateBundle = $rootScope.$localeBundle || {};
-                if (window.bazalt.trackNotTranslated != undefined && $rootScope.$localeBundle && translateBundle[string] == undefined) {
-                    if(strings[string] == undefined){
+                if (window.bazalt.trackNotTranslated != undefined) {
+                    if($rootScope.$localeBundle && translateBundle[string] == undefined && strings[string] == undefined){
                         strings[string] = string;
-                        $http({
-                            url: '/api/rest.php/translates?action=save-with-translate',
-                            method: 'PUT',
-                            data: {
-                                new_words:strings[string]
-                            }
-                        });
+                        //console.log('add', string);
+                        //console.trace();
+                        trTimers[string] = setTimeout(function(){
+                            //console.log('send', string);
+                            $http({
+                                url: '/api/rest.php/translates?action=save-with-translate',
+                                method: 'PUT',
+                                data: {
+                                    new_words: string
+                                }
+                            });
+                        }, 10000);
+                    }
+                    if($rootScope.$localeBundle && translateBundle[string] != undefined && strings[string] != undefined){
+                        //console.log('clear', string);
+                        delete strings[string];
+                        clearTimeout(trTimers[string]);
                     }
                 }
 
