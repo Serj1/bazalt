@@ -326,8 +326,12 @@
                     return defer.promise.then(null, null, callback);
                 };
                 sessionObject.prototype.$changeRole = function (roleId, callback, error) {
+                    var curUseLightFrontend = $session.role.use_light_frontend || 0;
                     sessionObject.changeRole({'role_id': roleId}, function (result) {
                         $session.$set(result);
+                        if(curUseLightFrontend != result.role.use_light_frontend || 0) {
+                            window.location.reload();
+                        }
                         callback = callback || angular.noop;
                         callback($session);
                     }, error);
