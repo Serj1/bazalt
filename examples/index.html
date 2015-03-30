@@ -15,13 +15,14 @@
     </style>
     <script>
     bazalt = {
-        api: 'http://localhost\\:666/rest.php',
+        api: 'http://localhost\\:8080/api/rest.php',
         languages: ['uk', 'en']
     }
     </script>
     <link rel="stylesheet" href="css/bootstrap.css"/>
     <!--script src="../build/bz.js" data-main="js/main"></script-->
-    <script src="../build/bz.js" data-main="js/main"></script>
+    <!--<script src="../build/bz-lite.src.js" data-main="js/main"></script>-->
+    <script src="../bower_components/requirejs/require.js" data-main="js/main"></script>
 </head>
 <body>
 
@@ -31,16 +32,6 @@
             <div class="navbar-header">
                 <a class="navbar-brand" href="#!/">Bazalt CMS</a>
             </div>
-
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav pull-right">
-                    <li ng-class="{'active': $language.id() == 'uk'}"><a href="" ng-click="$language.id('uk')">UK</a></li>
-                    <li ng-class="{'active': $language.id() == 'en'}"><a href="" ng-click="$language.id('en')">EN</a></li>
-                </ul>
-                <ul class="nav navbar-nav">
-                    <li><a href="#!/testpage">Test page</a></li>
-                </ul>
-            </div>
         </nav>
 
         <div class="row">
@@ -49,7 +40,6 @@
             </div>
 
             <div class="col col-lg-3 ng-cloak">
-                {{'Test'|translate}}
                 <form ng-if="$user.is_guest" ng-controller="login" ng-submit="login(user)" ng-init="user = { 'email': 'admin', 'password': '1' }">
                     <div class="form-group">
                         <label for="email">Login / Email:</label>

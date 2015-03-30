@@ -6,71 +6,86 @@ define([
     app.factory('bzSessionFactory', ['$resource', 'bzConfig', '$cookieStore', '$q', '$log', 'jwtInterceptor', '$localStorage',
         function ($resource, config, $cookieStore, $q, $log, jwtInterceptor, $localStorage) {
             var sessionObject = $resource(config.resource('/auth/session'), {}, {
-            'renew':    { method: 'PUT' },
-            'changeRole':    { method: 'PUT', params: {'action': 'changeRole'} },
-            '$login':    { method: 'POST' },
-            '$logout':   { method: 'DELETE' }
-        }), defer = $q.defer(),
-            $session,
-            guestData = { is_guest: true, permissions: ['guest'] };
+                    'renew': { method: 'PUT' },
+                    'changeRole': { method: 'PUT', params: {'action': 'changeRole'} },
+                    '$oauthLogin': { method: 'POST', params: {'action': 'oauth'} },
+                    '$login': { method: 'POST' },
+                    '$logout': { method: 'DELETE' }
+                }), defer = $q.defer(),
+                $session,
+                guestData = { is_guest: true, permissions: ['guest'] };
 
-        sessionObject.prototype.$login = function(data, callback, error) {
-            sessionObject.$login(data, function(result) {
-                $session.$set(result);
-                callback = callback || angular.noop;
-                callback($session);
-            }, error);
-        };
-        sessionObject.prototype.$logout = function(callback, error) {
-            $session.$set(angular.copy(guestData));
-            jwtInterceptor.setToken(undefined);
-            callback = callback || angular.noop;
-            callback($session);
-        };
-        sessionObject.prototype.$set = function(data) {
-            var oldSession = angular.copy($session);
-            angular.copy(data, this);
-            defer.notify({ 'user': $session, 'old': oldSession });
-        };
-        sessionObject.prototype.$update = function(callback, error) {
-            var oldSession = angular.copy($session);
-            this.$renew(function($session) {
+            sessionObject.prototype.$oauthLogin = function (data, callback, error) {
+                sessionObject.$oauthLogin(data, function (result) {
+                    $session.$set(result);
+                    callback = callback || angular.noop;
+                    callback($session);
+                }, error);
+            };
+            sessionObject.prototype.$login = function (data, callback, error) {
+                sessionObject.$login(data, function (result) {
+                    $session.$set(result);
+                    callback = callback || angular.noop;
+                    callback($session);
+                }, error);
+            };
+            sessionObject.prototype.$logout = function (callback, error) {
+                sessionObject.$logout({}, function (data) {
+                    data = angular.copy(guestData);
+                    $session.$set(data);
+                    //jwtInterceptor.setToken(undefined);
+                    callback = callback || angular.noop;
+                    callback($session);
+                }, error);
+            };
+            sessionObject.prototype.$set = function (data) {
+                var oldSession = angular.copy($session);
+                angular.copy(data, this);
                 defer.notify({ 'user': $session, 'old': oldSession });
-                callback = callback || angular.noop;
-                callback($session);
-            }, error);
-        };
-        sessionObject.prototype.$change = function(callback) {
-            return defer.promise.then(null, null, callback);
-        };
-        sessionObject.prototype.$changeRole = function(roleId, callback, error) {
-            sessionObject.changeRole({'role_id': roleId}, function(result) {
-                $session.$set(result);
-                callback = callback || angular.noop;
-                callback($session);
-            }, error);
-        };
-        sessionObject.prototype.has = function(permission) {
-            var permissions = this.permissions || [];
-            if(!angular.isArray(permission)) {
-                permission = [permission];
-            }
-            return !permission.diff(permissions).length;
-        };
+            };
+            sessionObject.prototype.$update = function (callback, error) {
+                var oldSession = angular.copy($session);
+                this.$renew(function ($session) {
+                    defer.notify({ 'user': $session, 'old': oldSession });
+                    callback = callback || angular.noop;
+                    callback($session);
+                }, error);
+            };
+            sessionObject.prototype.$change = function (callback) {
+                return defer.promise.then(null, null, callback);
+            };
+            sessionObject.prototype.$changeRole = function (roleId, callback, error) {
+                var curUseLightFrontend = $session.role.use_light_frontend || 0;
+                sessionObject.changeRole({'role_id': roleId}, function (result) {
+                    $session.$set(result);
+                    if(curUseLightFrontend != result.role.use_light_frontend || 0) {
+                        window.location.reload();
+                    }
+                    callback = callback || angular.noop;
+                    callback($session);
+                }, error);
+            };
+            sessionObject.prototype.has = function (permission) {
+                var permissions = this.permissions || [];
+                if (!angular.isArray(permission)) {
+                    permission = [permission];
+                }
+                return !permission.diff(permissions).length;
+            };
 
 
             $log.debug('Session in localStorage:', $localStorage.baAuthUser);
 
             $session = new sessionObject($localStorage.baAuthUser || angular.copy(guestData));
 
-            $session.$change(function() {
-            if ($session.jwt_token) {
-                $log.info('Set JWT token: ' + $session.jwt_token);
-                jwtInterceptor.setToken($session.jwt_token);
-            }
+            $session.$change(function () {
+                if ($session.jwt_token) {
+                    $log.info('Set JWT token: ' + $session.jwt_token);
+                    jwtInterceptor.setToken($session.jwt_token);
+                }
                 $localStorage.baAuthUser = $session;
             });
-        return $session;
-    }]);
+            return $session;
+        }]);
 
 });

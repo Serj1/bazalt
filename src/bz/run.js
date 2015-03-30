@@ -8,24 +8,19 @@ define([
     'bz/providers/bzConfig',
     'bz/providers/bzUser',
 
-    'bz/directives/a',
     'bz/directives/bzLoadingContainer',
-    'bz/directives/bzThumb',
 
-    'bz/filters/translate',
-    'bz/filters/language'
-], function(app, status403interceptor) {
+    'bz/filters/translate'
+], function(app) {
 
     app.config(['$httpProvider', function($httpProvider) {
         // send cookies via CORS
         $httpProvider.defaults.withCredentials = true;
-
-        $httpProvider.responseInterceptors.push(status403interceptor);
     }]);
 
     app.run(['$rootScope', 'bzLanguage', 'bzConfig', '$location', '$log', '$route', 'bzUser', '$routeSegment',
         function($rootScope, $language, $config, $location, $log, $route, $user, $routeSegment) {
-        $log.debug('Thanks for using Bazalt CMS (http://bazalt-cms.com) by Vitalii Savchuk (esvit666@gmail.com)');
+        //$log.debug('Thanks for using Bazalt CMS (http://bazalt-cms.com) by Vitalii Savchuk (esvit666@gmail.com)');
 
         $rootScope.$language = $language;
         $rootScope.$config = $config;
