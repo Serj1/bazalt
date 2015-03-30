@@ -10,7 +10,8 @@ define([
 
     'bz/directives/bzLoadingContainer',
 
-    'bz/filters/translate'
+    'bz/filters/translate',
+    'bz/filters/language'
 ], function(app) {
 
     app.config(['$httpProvider', function($httpProvider) {

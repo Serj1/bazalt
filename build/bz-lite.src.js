@@ -521,6 +521,31 @@ define('bz/filters/translate',['bz/app'], function (app) {
     }]);
 
 });
+define('bz/filters/language',[
+    'bz/app',
+
+    'bz/providers/bzLanguage'
+], function (app) {
+    'use strict';
+
+    app.filter('language', ['bzLanguage', function (bzLanguage) {
+        var languageFilter = function (value, language) {
+            if (typeof value == 'undefined' || value === null) {
+                return value;
+            }
+            language = language || bzLanguage.id();
+            if (!value[language] && value.orig) {
+                return value[value.orig];// + ' (' + value.orig + ')';
+            }
+            return value[language] || null;
+        }
+
+        languageFilter.$stateful = true;
+
+        return languageFilter;
+    }]);
+
+});
 define('bz',[
     'bz/app',
 
@@ -533,7 +558,8 @@ define('bz',[
 
     'bz/directives/bzLoadingContainer',
 
-    'bz/filters/translate'
+    'bz/filters/translate',
+    'bz/filters/language'
 ], function(app) {
 
     app.config(['$httpProvider', function($httpProvider) {

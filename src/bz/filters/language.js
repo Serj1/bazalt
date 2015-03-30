@@ -2,11 +2,11 @@ define([
     'bz/app',
 
     'bz/providers/bzLanguage'
-], function(app) {
+], function (app) {
     'use strict';
 
-    app.filter('language', ['bzLanguage', function(bzLanguage) {
-        return function(value, language) {
+    app.filter('language', ['bzLanguage', function (bzLanguage) {
+        var languageFilter = function (value, language) {
             if (typeof value == 'undefined' || value === null) {
                 return value;
             }
@@ -16,6 +16,10 @@ define([
             }
             return value[language] || null;
         }
+
+        languageFilter.$stateful = true;
+
+        return languageFilter;
     }]);
 
 });
