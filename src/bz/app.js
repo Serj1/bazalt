@@ -3,7 +3,7 @@ define([
 
     'angular-resource', 'angular-route', 'angular-cookies',
 
-    'angular-route-segment', 'ngstorage'
+    'angular-route-segment', 'ngstorage', 'lz-string'
 ], function(angular) {
     'use strict';
 

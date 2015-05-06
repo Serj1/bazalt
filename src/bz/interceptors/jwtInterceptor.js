@@ -1,22 +1,14 @@
 define([
     'angular',
-    'bz/app'
-], function (angular, app) {
+    'bz/app',
+    'lz-string'
+], function (angular, app, LZString) {
     'use strict';
 
-    app.factory('jwtInterceptor', ['$rootScope', '$q', '$window', '$cookieStore', function ($rootScope, $q, $window, $cookieStore) {
-        var setItem = ($window.localStorage) ? function (key, value) {
-            $window.localStorage[key] = value;
-        } : function (key, value) {
-            $cookieStore.put(key, value);
-        }, getItem = ($window.localStorage) ? function (key) {
-            return $window.localStorage[key] || null;
-        } : function(key) {
-            return $cookieStore.get(key);
-        };
+    app.factory('jwtInterceptor', ['$rootScope', '$q', '$window', 'bzStorage', function ($rootScope, $q, $window, bzStorage) {
         return {
             request: function (config) {
-                var token = getItem('token');
+                var token = bzStorage.getItem('token');
                 config.headers = config.headers || {};
                 if (token != 'undefined' && angular.isDefined(token)) {
                     config.headers.Authorization = 'Bearer ' + token;
@@ -30,10 +22,10 @@ define([
                 return response || $q.when(response);
             },
             getToken: function() {
-                return getItem('token');
+                return bzStorage.getItem('token');
             },
             setToken: function(token) {
-                setItem('token', token);
+                bzStorage.setItem('token', token);
             }
         };
     }]);

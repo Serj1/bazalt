@@ -1,6 +1,8 @@
 define([
     'bz/app',
 
+    'bz/factories/bzStorage',
+
     'bz/interceptors/status403',
     'bz/interceptors/jwtInterceptor',
 

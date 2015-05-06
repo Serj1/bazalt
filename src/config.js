@@ -11,6 +11,7 @@ requirejs.config({
         'angular-route': '../bower_components/angular-route/angular-route',
         'angular-cookies': '../bower_components/angular-cookies/angular-cookies',
         'ngstorage': '../bower_components/ngstorage/ngStorage.min',
+        'lz-string': '../bower_components/lz-string/libs/lz-string.min',
         'angular-route-segment': '../bower_components/angular-route-segment/build/angular-route-segment',
 
         // tests
@@ -22,6 +23,7 @@ requirejs.config({
         'angular-route': { deps: ['angular'] },
         'angular-cookies': { deps: ['angular'] },
         'ngstorage': { deps: ['angular'] },
+        'lz-string': {deps: ['angular']},
         'angular-route-segment': { deps: ['angular', 'angular-route'] }
     },
     priority: [

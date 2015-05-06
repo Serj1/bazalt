@@ -3,7 +3,7 @@
 
     'angular-resource', 'angular-route', 'angular-cookies',
 
-    'angular-route-segment', 'ngstorage'
+    'angular-route-segment', 'ngstorage', 'lz-string'
 ], function(angular) {
     'use strict';
 
@@ -12,6 +12,44 @@
 
         'route-segment', 'view-segment', 'ngStorage'
     ]);
+});
+
+define('bz/factories/bzStorage',[
+    'angular', 'bz/app',
+    'lz-string'
+], function (angular, app, LZString) {
+    'use strict';
+
+    app.factory('bzStorage', ['$cookieStore', '$localStorage',
+        function ($cookieStore, $localStorage) {
+            var localStorageSupported = function () {
+                try {
+                    localStorage.setItem("test", "test");
+                    localStorage.removeItem("test");
+                    return true;
+                } catch(e){
+                    return false;
+                }
+            }
+
+            return {
+                setItem: function (key, value) {
+                    if (localStorageSupported()) {
+                        $localStorage[key] = value;
+                    } else {
+                        $cookieStore.put(key, LZString.compressToEncodedURIComponent(JSON.stringify(value)));
+                    }
+                },
+                getItem: function (key) {
+                    if (localStorageSupported()) {
+                        return $localStorage[key] || null;
+                    } else {
+                        return $cookieStore.get(key) ? JSON.parse(LZString.decompressFromEncodedURIComponent($cookieStore.get(key))) : null;
+                    }
+                }
+            };
+        }]);
+
 });
 
 define('bz/factories/bzInterceptorBuffer',[
@@ -104,23 +142,15 @@ define('bz/interceptors/status403',[
 });
 define('bz/interceptors/jwtInterceptor',[
     'angular',
-    'bz/app'
-], function (angular, app) {
+    'bz/app',
+    'lz-string'
+], function (angular, app, LZString) {
     'use strict';
 
-    app.factory('jwtInterceptor', ['$rootScope', '$q', '$window', '$cookieStore', function ($rootScope, $q, $window, $cookieStore) {
-        var setItem = ($window.localStorage) ? function (key, value) {
-            $window.localStorage[key] = value;
-        } : function (key, value) {
-            $cookieStore.put(key, value);
-        }, getItem = ($window.localStorage) ? function (key) {
-            return $window.localStorage[key] || null;
-        } : function(key) {
-            return $cookieStore.get(key);
-        };
+    app.factory('jwtInterceptor', ['$rootScope', '$q', '$window', 'bzStorage', function ($rootScope, $q, $window, bzStorage) {
         return {
             request: function (config) {
-                var token = getItem('token');
+                var token = bzStorage.getItem('token');
                 config.headers = config.headers || {};
                 if (token != 'undefined' && angular.isDefined(token)) {
                     config.headers.Authorization = 'Bearer ' + token;
@@ -134,10 +164,10 @@ define('bz/interceptors/jwtInterceptor',[
                 return response || $q.when(response);
             },
             getToken: function() {
-                return getItem('token');
+                return bzStorage.getItem('token');
             },
             setToken: function(token) {
-                setItem('token', token);
+                bzStorage.setItem('token', token);
             }
         };
     }]);
@@ -269,12 +299,13 @@ define('bz/providers/bzLanguage',[
 
 });
 define('bz/factories/bzSessionFactory',[
-    'angular', 'bz/app', 'bz/providers/bzConfig'
-], function(angular, app) {
+    'angular', 'bz/app',
+    'lz-string', 'bz/providers/bzConfig'
+], function(angular, app, LZString) {
     'use strict';
 
-    app.factory('bzSessionFactory', ['$resource', 'bzConfig', '$cookieStore', '$q', '$log', 'jwtInterceptor', '$localStorage',
-        function ($resource, config, $cookieStore, $q, $log, jwtInterceptor, $localStorage) {
+    app.factory('bzSessionFactory', ['$resource', 'bzConfig', '$q', '$log', 'jwtInterceptor', 'bzStorage',
+        function ($resource, config, $q, $log, jwtInterceptor, bzStorage) {
             var sessionObject = $resource(config.resource('/auth/session'), {}, {
                     'renew': { method: 'PUT' },
                     'changeRole': { method: 'PUT', params: {'action': 'changeRole'} },
@@ -344,16 +375,18 @@ define('bz/factories/bzSessionFactory',[
             };
 
 
-            $log.debug('Session in localStorage:', $localStorage.baAuthUser);
+            var baAuthUser = bzStorage.getItem('baAuthUser');
 
-            $session = new sessionObject($localStorage.baAuthUser || angular.copy(guestData));
+            $log.debug('Session in localStorage:', baAuthUser);
+
+            $session = new sessionObject(baAuthUser || angular.copy(guestData));
 
             $session.$change(function () {
                 if ($session.jwt_token) {
                     $log.info('Set JWT token: ' + $session.jwt_token);
                     jwtInterceptor.setToken($session.jwt_token);
                 }
-                $localStorage.baAuthUser = $session;
+                bzStorage.setItem('baAuthUser', $session);
             });
             return $session;
         }]);
@@ -548,6 +581,8 @@ define('bz/filters/language',[
 });
 define('bz',[
     'bz/app',
+
+    'bz/factories/bzStorage',
 
     'bz/interceptors/status403',
     'bz/interceptors/jwtInterceptor',
