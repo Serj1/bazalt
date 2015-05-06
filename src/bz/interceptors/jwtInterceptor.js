@@ -1,8 +1,7 @@
 define([
     'angular',
-    'bz/app',
-    'lz-string'
-], function (angular, app, LZString) {
+    'bz/app'
+], function (angular, app) {
     'use strict';
 
     app.factory('jwtInterceptor', ['$rootScope', '$q', '$window', 'bzStorage', function ($rootScope, $q, $window, bzStorage) {

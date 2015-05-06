@@ -1,7 +1,7 @@
 define([
     'angular', 'bz/app',
-    'lz-string', 'bz/providers/bzConfig'
-], function(angular, app, LZString) {
+    'bz/providers/bzConfig'
+], function(angular, app) {
     'use strict';
 
     app.factory('bzSessionFactory', ['$resource', 'bzConfig', '$q', '$log', 'jwtInterceptor', 'bzStorage',

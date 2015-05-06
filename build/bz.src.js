@@ -28661,9 +28661,8 @@ define('bz/interceptors/status403',[
 });
 define('bz/interceptors/jwtInterceptor',[
     'angular',
-    'bz/app',
-    'lz-string'
-], function (angular, app, LZString) {
+    'bz/app'
+], function (angular, app) {
     'use strict';
 
     app.factory('jwtInterceptor', ['$rootScope', '$q', '$window', 'bzStorage', function ($rootScope, $q, $window, bzStorage) {
@@ -28819,8 +28818,8 @@ define('bz/providers/bzLanguage',[
 });
 define('bz/factories/bzSessionFactory',[
     'angular', 'bz/app',
-    'lz-string', 'bz/providers/bzConfig'
-], function(angular, app, LZString) {
+    'bz/providers/bzConfig'
+], function(angular, app) {
     'use strict';
 
     app.factory('bzSessionFactory', ['$resource', 'bzConfig', '$q', '$log', 'jwtInterceptor', 'bzStorage',
