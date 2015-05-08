@@ -1,6 +1,7 @@
 define([
     'angular', 'bz/app',
-    'bz/providers/bzConfig'
+    'bz/providers/bzConfig',
+    'bz/helpers/diff'
 ], function(angular, app) {
     'use strict';
 

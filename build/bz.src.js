@@ -28816,9 +28816,56 @@ define('bz/providers/bzLanguage',[
     }]);
 
 });
+define('bz/helpers/filter',[], function() {
+    'use strict';
+
+    if (!Array.prototype.filter) {
+        Array.prototype.filter = function (callback) {
+            var arr = [];
+            callback = callback || function() {};
+            for (var i = 0, count = this.length; i < count; i++) {
+                if (callback(this[i])) {
+                    arr.push(this[i]);
+                }
+            }
+            return arr;
+        };
+    }
+
+});
+define('bz/helpers/indexOf',[], function() {
+    'use strict';
+
+    if (!Array.prototype.indexOf) {
+        Array.prototype.indexOf = function (obj, fromIndex) {
+            if (fromIndex == null) {
+                fromIndex = 0;
+            } else if (fromIndex < 0) {
+                fromIndex = Math.max(0, this.length + fromIndex);
+            }
+            for (var i = fromIndex, j = this.length; i < j; i++) {
+                if (this[i] === obj)
+                    return i;
+            }
+            return -1;
+        };
+    }
+
+});
+define('bz/helpers/diff',['bz/helpers/filter', 'bz/helpers/indexOf'], function() {
+    'use strict';
+
+    if (!Array.prototype.diff) {
+        Array.prototype.diff = function (a) {
+            return this.filter(function(i) {return !(a.indexOf(i) > -1);});
+        };
+    }
+
+});
 define('bz/factories/bzSessionFactory',[
     'angular', 'bz/app',
-    'bz/providers/bzConfig'
+    'bz/providers/bzConfig',
+    'bz/helpers/diff'
 ], function(angular, app) {
     'use strict';
 
@@ -28911,52 +28958,6 @@ define('bz/factories/bzSessionFactory',[
 
 });
 
-define('bz/helpers/filter',[], function() {
-    'use strict';
-
-    if (!Array.prototype.filter) {
-        Array.prototype.filter = function (callback) {
-            var arr = [];
-            callback = callback || function() {};
-            for (var i = 0, count = this.length; i < count; i++) {
-                if (callback(this[i])) {
-                    arr.push(this[i]);
-                }
-            }
-            return arr;
-        };
-    }
-
-});
-define('bz/helpers/indexOf',[], function() {
-    'use strict';
-
-    if (!Array.prototype.indexOf) {
-        Array.prototype.indexOf = function (obj, fromIndex) {
-            if (fromIndex == null) {
-                fromIndex = 0;
-            } else if (fromIndex < 0) {
-                fromIndex = Math.max(0, this.length + fromIndex);
-            }
-            for (var i = fromIndex, j = this.length; i < j; i++) {
-                if (this[i] === obj)
-                    return i;
-            }
-            return -1;
-        };
-    }
-
-});
-define('bz/helpers/diff',['bz/helpers/filter', 'bz/helpers/indexOf'], function() {
-    'use strict';
-
-    if (!Array.prototype.diff) {
-        Array.prototype.diff = function (a) {
-            return this.filter(function(i) {return !(a.indexOf(i) > -1);});
-        };
-    }
-
-});
 define('bz/providers/bzUser',[
     'angular',
     'bz/app',
