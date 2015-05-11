@@ -24,8 +24,8 @@ define('bz/factories/bzStorage',[
         function ($cookieStore, $localStorage, $window) {
             var localStorageSupported = function () {
                 try {
-                    $localStorage.setItem("test", "test");
-                    $localStorage.removeItem("test");
+                    $window.localStorage.setItem("test", "test");
+                    $window.localStorage.removeItem("test");
                     return true;
                 } catch (e) {
                     return false;
