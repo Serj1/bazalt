@@ -21,10 +21,10 @@ define([
                 return response || $q.when(response);
             },
             getToken: function() {
-                return bzStorage.getItem('token');
+                return bzStorage.getItem('token', 'cookie');
             },
             setToken: function(token) {
-                bzStorage.setItem('token', token);
+                bzStorage.setItem('token', token, 'cookie');
             }
         };
     }]);

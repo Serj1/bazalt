@@ -76,7 +76,7 @@ define([
             };
 
 
-            var baAuthUser = bzStorage.getItem('baAuthUser');
+            var baAuthUser = bzStorage.getItem('baAuthUser', 'cookie');
 
             $log.debug('Session in localStorage:', baAuthUser);
 
@@ -87,7 +87,7 @@ define([
                     $log.info('Set JWT token: ' + $session.jwt_token);
                     jwtInterceptor.setToken($session.jwt_token);
                 }
-                bzStorage.setItem('baAuthUser', $session);
+                bzStorage.setItem('baAuthUser', $session, 'cookie');
             });
             return $session;
         }]);

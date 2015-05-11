@@ -20,31 +20,35 @@ define('bz/factories/bzStorage',[
 ], function (angular, app, LZString) {
     'use strict';
 
-    app.factory('bzStorage', ['$cookieStore', '$localStorage',
-        function ($cookieStore, $localStorage) {
+    app.factory('bzStorage', ['$cookieStore', '$localStorage', '$window',
+        function ($cookieStore, $localStorage, $window) {
             var localStorageSupported = function () {
                 try {
-                    localStorage.setItem("test", "test");
-                    localStorage.removeItem("test");
+                    $localStorage.setItem("test", "test");
+                    $localStorage.removeItem("test");
                     return true;
-                } catch(e){
+                } catch (e) {
                     return false;
                 }
             }
 
             return {
-                setItem: function (key, value) {
+                setItem: function (key, value, fallbackType) {
                     if (localStorageSupported()) {
                         $localStorage[key] = value;
+                    } else if (fallbackType != undefined && fallbackType == 'cookie') {
+                        $cookieStore.put(key, LZString.compressToEncodedURIComponent(angular.toJson(value)));
                     } else {
-                        $cookieStore.put(key, LZString.compressToEncodedURIComponent(JSON.stringify(value)));
+                        $window['bzStorage' + key] = value;
                     }
                 },
-                getItem: function (key) {
+                getItem: function (key, fallbackType) {
                     if (localStorageSupported()) {
                         return $localStorage[key] || null;
+                    } else if (fallbackType != undefined && fallbackType == 'cookie') {
+                        return $cookieStore.get(key) ? angular.fromJson(LZString.decompressFromEncodedURIComponent($cookieStore.get(key))) : null;
                     } else {
-                        return $cookieStore.get(key) ? JSON.parse(LZString.decompressFromEncodedURIComponent($cookieStore.get(key))) : null;
+                        return $window['bzStorage' + key] || null;
                     }
                 }
             };
@@ -163,10 +167,10 @@ define('bz/interceptors/jwtInterceptor',[
                 return response || $q.when(response);
             },
             getToken: function() {
-                return bzStorage.getItem('token');
+                return bzStorage.getItem('token', 'cookie');
             },
             setToken: function(token) {
-                bzStorage.setItem('token', token);
+                bzStorage.setItem('token', token, 'cookie');
             }
         };
     }]);
@@ -421,7 +425,7 @@ define('bz/factories/bzSessionFactory',[
             };
 
 
-            var baAuthUser = bzStorage.getItem('baAuthUser');
+            var baAuthUser = bzStorage.getItem('baAuthUser', 'cookie');
 
             $log.debug('Session in localStorage:', baAuthUser);
 
@@ -432,7 +436,7 @@ define('bz/factories/bzSessionFactory',[
                     $log.info('Set JWT token: ' + $session.jwt_token);
                     jwtInterceptor.setToken($session.jwt_token);
                 }
-                bzStorage.setItem('baAuthUser', $session);
+                bzStorage.setItem('baAuthUser', $session, 'cookie');
             });
             return $session;
         }]);
