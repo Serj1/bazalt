@@ -28672,7 +28672,7 @@ define('bz/interceptors/jwtInterceptor',[
     app.factory('jwtInterceptor', ['$rootScope', '$q', '$window', 'bzStorage', function ($rootScope, $q, $window, bzStorage) {
         return {
             request: function (config) {
-                var token = bzStorage.getItem('token');
+                var token = bzStorage.getItem('token', 'cookie');
                 config.headers = config.headers || {};
                 if (token != 'undefined' && angular.isDefined(token)) {
                     config.headers.Authorization = 'Bearer ' + token;
