@@ -354,7 +354,7 @@ define('bz/factories/bzSessionFactory',[
 ], function(angular, app) {
     'use strict';
 
-    app.factory('bzSessionFactory', ['$resource', 'bzConfig', '$q', '$log', 'jwtInterceptor', 'bzStorage',
+    app.factory('bzSessionFactory', ['$resource', 'bzConfig', '$q', '$log', 'jwtInterceptor', 'bzStorage', '$rootScope',
         function ($resource, config, $q, $log, jwtInterceptor, bzStorage, $rootScope) {
             var sessionObject = $resource(config.resource('/auth/session'), {}, {
                     'renew': { method: 'PUT' },
