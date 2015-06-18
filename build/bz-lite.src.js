@@ -355,7 +355,7 @@ define('bz/factories/bzSessionFactory',[
     'use strict';
 
     app.factory('bzSessionFactory', ['$resource', 'bzConfig', '$q', '$log', 'jwtInterceptor', 'bzStorage',
-        function ($resource, config, $q, $log, jwtInterceptor, bzStorage) {
+        function ($resource, config, $q, $log, jwtInterceptor, bzStorage, $rootScope) {
             var sessionObject = $resource(config.resource('/auth/session'), {}, {
                     'renew': { method: 'PUT' },
                     'changeRole': { method: 'PUT', params: {'action': 'changeRole'} },
@@ -393,11 +393,13 @@ define('bz/factories/bzSessionFactory',[
                 var oldSession = angular.copy($session);
                 angular.copy(data, this);
                 defer.notify({ 'user': $session, 'old': oldSession });
+                $rootScope.$emit('$user:sessionChecked');
             };
             sessionObject.prototype.$update = function (callback, error) {
                 var oldSession = angular.copy($session);
                 this.$renew(function ($session) {
                     defer.notify({ 'user': $session, 'old': oldSession });
+                    $rootScope.$emit('$user:sessionChecked');
                     callback = callback || angular.noop;
                     callback($session);
                 }, error);

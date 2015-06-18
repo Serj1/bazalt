@@ -40,7 +40,7 @@ module.exports = function(grunt) {
                 dest: 'build/bz.js'
             },
             options: {
-                compress: true,
+                compress: {},
                 mangle: true,
                 preserveComments: false,
                 sourceMapPrefix: 1,
