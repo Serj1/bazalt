@@ -411,11 +411,11 @@ define('bz/factories/bzSessionFactory',[
                 var curUseLightFrontend = $session.role.use_light_frontend || 0;
                 sessionObject.changeRole({'role_id': roleId}, function (result) {
                     $session.$set(result);
-                    if(curUseLightFrontend != result.role.use_light_frontend || 0) {
-                        window.location.reload();
-                    }
                     callback = callback || angular.noop;
                     callback($session);
+                    if(curUseLightFrontend != result.role.use_light_frontend || 0) {
+                        setTimeout(window.location.reload, 200);
+                    }
                 }, error);
             };
             sessionObject.prototype.has = function (permission) {
