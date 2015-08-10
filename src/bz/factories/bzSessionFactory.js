@@ -65,7 +65,9 @@ define([
                     callback = callback || angular.noop;
                     callback($session);
                     if(curUseLightFrontend != result.role.use_light_frontend || 0) {
-                        setTimeout(window.location.reload, 200);
+                        setTimeout(function(){
+                            window.location.reload();
+                        }, 200);
                     }
                 }, error);
             };
