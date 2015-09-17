@@ -28927,16 +28927,16 @@ define('bz/factories/bzSessionFactory',[
                 return defer.promise.then(null, null, callback);
             };
             sessionObject.prototype.$changeRole = function (roleId, callback, error) {
-                var curUseLightFrontend = $session.role.use_light_frontend || 0;
+                //var curUseLightFrontend = $session.role.use_light_frontend || 0;
                 sessionObject.changeRole({'role_id': roleId}, function (result) {
                     $session.$set(result);
                     callback = callback || angular.noop;
                     callback($session);
-                    if(curUseLightFrontend != result.role.use_light_frontend || 0) {
-                        setTimeout(function(){
-                            window.location.reload();
-                        }, 200);
-                    }
+                    //if(curUseLightFrontend != result.role.use_light_frontend || 0) {
+                    //    setTimeout(function(){
+                    //        window.location.reload();
+                    //    }, 200);
+                    //}
                 }, error);
             };
             sessionObject.prototype.has = function (permission) {
