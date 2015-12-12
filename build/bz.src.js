@@ -28663,6 +28663,32 @@ define('bz/interceptors/status403',[
         $httpProvider.interceptors.push('status403interceptor');
     }]);
 });
+define('bz/interceptors/status324',[
+    'angular',
+    'bz/app'
+], function (angular, app) {
+    'use strict';
+
+    // catch net:ERR_EMPTY_RESPONSE and retry request after 200 ms
+    app.factory('status324interceptor', ['$injector', '$q', '$timeout', function($injector, $q, $timeout) {
+        return {
+            'responseError': function(response) {
+                if (response.status === 324) {
+                    return $timeout(function() {
+                        var $http = $injector.get('$http');
+                        return $http(response.config);
+                    }, 200);
+                }
+                return $q.reject(response);
+            }
+        };
+    }]);
+
+
+    app.config(['$httpProvider', function ($httpProvider) {
+        $httpProvider.interceptors.push('status324interceptor');
+    }]);
+});
 define('bz/interceptors/jwtInterceptor',[
     'angular',
     'bz/app'
@@ -29112,6 +29138,7 @@ define('bz',[
     'bz/factories/bzStorage',
 
     'bz/interceptors/status403',
+    'bz/interceptors/status324',
     'bz/interceptors/jwtInterceptor',
 
     'bz/providers/bzLanguage',

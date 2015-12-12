@@ -4,6 +4,7 @@ define([
     'bz/factories/bzStorage',
 
     'bz/interceptors/status403',
+    'bz/interceptors/status324',
     'bz/interceptors/jwtInterceptor',
 
     'bz/providers/bzLanguage',
