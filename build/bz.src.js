@@ -28906,11 +28906,19 @@ define('bz/factories/bzSessionFactory',[
                     'changeRole': { method: 'PUT', params: {'action': 'changeRole'} },
                     '$oauthLogin': { method: 'POST', params: {'action': 'oauth'} },
                     '$login': { method: 'POST' },
+                    '$otpCheck': {method: 'POST', params: {'action': 'otp-check'}},
                     '$logout': { method: 'DELETE' }
                 }), defer = $q.defer(),
                 $session,
                 guestData = { is_guest: true, permissions: ['guest'] };
 
+            sessionObject.prototype.$otpCheck = function (data, callback, error) {
+                sessionObject.$otpCheck(data, function (result) {
+                    $session.$set(result);
+                    callback = callback || angular.noop;
+                    callback($session);
+                }, error);
+            };
             sessionObject.prototype.$oauthLogin = function (data, callback, error) {
                 sessionObject.$oauthLogin(data, function (result) {
                     $session.$set(result);
