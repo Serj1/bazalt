@@ -4,8 +4,8 @@ define([
 ], function (angular, app, LZString) {
     'use strict';
 
-    app.factory('bzStorage', ['$cookieStore', '$localStorage', '$window',
-        function ($cookieStore, $localStorage, $window) {
+    app.factory('bzStorage', ['$cookieStore', '$window',
+        function ($cookieStore, $window) {
             var localStorageSupported = function () {
                 try {
                     $window.localStorage.setItem("test", "test");
@@ -19,18 +19,18 @@ define([
             return {
                 setItem: function (key, value, fallbackType) {
                     if (localStorageSupported()) {
-                        $localStorage[key] = value;
+                        $window.localStorage.setItem('ngStorage2-' + key, value);
                     } else if (fallbackType != undefined && fallbackType == 'cookie') {
-                        $cookieStore.put(key, LZString.compressToEncodedURIComponent(angular.toJson(value)));
+                        $cookieStore.put(key, LZString.compressToBase64(value));
                     } else {
                         $window['bzStorage' + key] = value;
                     }
                 },
                 getItem: function (key, fallbackType) {
                     if (localStorageSupported()) {
-                        return $localStorage[key] || null;
+                        return $window.localStorage.getItem('ngStorage2-' + key) || null;
                     } else if (fallbackType != undefined && fallbackType == 'cookie') {
-                        return $cookieStore.get(key) ? angular.fromJson(LZString.decompressFromEncodedURIComponent($cookieStore.get(key))) : null;
+                        return $cookieStore.get(key) ? LZString.decompressFromBase64(decodeURIComponent($cookieStore.get(key))) : null;
                     } else {
                         return $window['bzStorage' + key] || null;
                     }

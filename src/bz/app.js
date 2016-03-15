@@ -3,13 +3,13 @@ define([
 
     'angular-resource', 'angular-route', 'angular-cookies',
 
-    'angular-route-segment', 'ngstorage', 'lz-string'
+    'angular-route-segment', 'lz-string'
 ], function(angular) {
     'use strict';
 
     return angular.module('bz', [
         'ngResource', 'ngRoute', 'ngCookies', 'ngLocale',
 
-        'route-segment', 'view-segment', 'ngStorage'
+        'route-segment', 'view-segment'
     ]);
 });

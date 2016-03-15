@@ -90,16 +90,16 @@ define([
 
             var baAuthUser = bzStorage.getItem('baAuthUser', 'cookie');
 
-            $log.debug('Session in localStorage:', baAuthUser);
+            $session = new sessionObject(baAuthUser ? angular.fromJson(baAuthUser) : angular.copy(guestData));
 
-            $session = new sessionObject(baAuthUser || angular.copy(guestData));
+            $log.debug('Session in localStorage:', $session);
 
             $session.$change(function () {
                 if ($session.jwt_token) {
                     $log.info('Set JWT token: ' + $session.jwt_token);
                     jwtInterceptor.setToken($session.jwt_token);
                 }
-                bzStorage.setItem('baAuthUser', $session, 'cookie');
+                bzStorage.setItem('baAuthUser', angular.toJson($session), 'cookie');
             });
             return $session;
         }]);
