@@ -380,6 +380,13 @@ define('bz/factories/bzSessionFactory',[
 ], function(angular, app) {
     'use strict';
 
+    var guid = function() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+            return v.toString(16);
+        });
+    }
+
     app.factory('bzSessionFactory', ['$resource', 'bzConfig', '$q', '$log', 'jwtInterceptor', 'bzStorage', '$rootScope',
         function ($resource, config, $q, $log, jwtInterceptor, bzStorage, $rootScope) {
             var sessionObject = $resource(config.resource('/auth/session'), {}, {
@@ -394,6 +401,7 @@ define('bz/factories/bzSessionFactory',[
                 guestData = { is_guest: true, permissions: ['guest'] };
 
             sessionObject.prototype.$otpCheck = function (data, callback, error) {
+                data.browser_id = this.getBrowserId();
                 sessionObject.$otpCheck(data, function (result) {
                     $session.$set(result);
                     callback = callback || angular.noop;
@@ -408,6 +416,7 @@ define('bz/factories/bzSessionFactory',[
                 }, error);
             };
             sessionObject.prototype.$login = function (data, callback, error) {
+                data.browser_id = this.getBrowserId();
                 sessionObject.$login(data, function (result) {
                     $session.$set(result);
                     callback = callback || angular.noop;
@@ -431,6 +440,7 @@ define('bz/factories/bzSessionFactory',[
             };
             sessionObject.prototype.$update = function (callback, error) {
                 var oldSession = angular.copy($session);
+                this.browser_id = this.getBrowserId();
                 this.$renew(function ($session) {
                     defer.notify({ 'user': $session, 'old': oldSession });
                     $rootScope.$emit('$user:sessionChecked');
@@ -440,6 +450,15 @@ define('bz/factories/bzSessionFactory',[
             };
             sessionObject.prototype.$change = function (callback) {
                 return defer.promise.then(null, null, callback);
+            };
+            sessionObject.prototype.getBrowserId = function () {
+                var id = bzStorage.getItem('browserId', 'cookie');
+                if(!id) {
+                    id = guid();
+                    bzStorage.setItem('browserId', id, 'cookie');
+                }
+
+                return id;
             };
             sessionObject.prototype.$changeRole = function (roleId, callback, error) {
                 //var curUseLightFrontend = $session.role.use_light_frontend || 0;
