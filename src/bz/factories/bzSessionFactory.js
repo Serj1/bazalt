@@ -17,6 +17,7 @@ define([
             var sessionObject = $resource(config.resource('/auth/session'), {}, {
                     'renew': { method: 'PUT' },
                     'changeRole': { method: 'PUT', params: {'action': 'changeRole'} },
+                    'needCaptcha': { method: 'GET', params: {'action': 'need-captcha'} },
                     '$oauthLogin': { method: 'POST', params: {'action': 'oauth'} },
                     '$login': { method: 'POST' },
                     '$otpCheck': {method: 'POST', params: {'action': 'otp-check'}},
@@ -24,7 +25,14 @@ define([
                 }), defer = $q.defer(),
                 $session,
                 guestData = { is_guest: true, permissions: ['guest'] };
-
+            
+            sessionObject.prototype.needCaptcha = function (data, callback, error) {
+                data.browser_id = this.getBrowserId();
+                sessionObject.needCaptcha(data, function (result) {
+                    callback = callback || angular.noop;
+                    callback(result);
+                }, error);
+            };
             sessionObject.prototype.$otpCheck = function (data, callback, error) {
                 data.browser_id = this.getBrowserId();
                 sessionObject.$otpCheck(data, function (result) {
