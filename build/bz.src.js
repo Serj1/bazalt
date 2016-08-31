@@ -28700,6 +28700,10 @@ define('bz/interceptors/jwtInterceptor',[
                 if (token != 'undefined' && angular.isDefined(token)) {
                     config.headers.Authorization = 'Bearer ' + token;
                 }
+                var browserId = bzStorage.getItem('browserId', 'cookie');
+                if(browserId) {
+                    config.headers['X-Browser-Id'] = browserId;
+                }
                 return config;
             },
             response: function (response) {
