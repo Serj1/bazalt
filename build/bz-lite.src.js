@@ -606,6 +606,7 @@ define('bz/filters/translate',['bz/app'], function (app) {
                             url: '/api/rest.php/translates?action=save-with-translate',
                             method: 'PUT',
                             data: {
+                                version: window.bazalt.APP_VERSION.split('.').shift(),
                                 new_words: string
                             }
                         });
