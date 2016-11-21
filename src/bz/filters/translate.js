@@ -13,11 +13,13 @@ define(['bz/app'], function (app) {
                     //console.trace();
                     trTimers[string] = setTimeout(function () {
                         //console.log('send', string);
+                        var tmp = window.bazalt.APP_VERSION.split('.');
+                        tmp.pop();
                         $http({
                             url: '/api/rest.php/translates?action=save-with-translate',
                             method: 'PUT',
                             data: {
-                                version: window.bazalt.APP_VERSION.split('.').shift(),
+                                version: tmp.join('.'),
                                 new_words: string
                             }
                         });
