@@ -3,7 +3,7 @@
 
     'angular-resource', 'angular-route', 'angular-cookies',
 
-    'angular-route-segment', 'lz-string'
+    'angular-route-segment'
 ], function(angular) {
     'use strict';
 
@@ -15,9 +15,8 @@
 });
 
 define('bz/factories/bzStorage',[
-    'angular', 'bz/app',
-    'lz-string'
-], function (angular, app, LZString) {
+    'angular', 'bz/app'
+], function (angular, app) {
     'use strict';
 
     app.factory('bzStorage', ['$cookieStore', '$window',
@@ -37,7 +36,7 @@ define('bz/factories/bzStorage',[
                     if (localStorageSupported()) {
                         $window.localStorage.setItem('ngStorage2-' + key, value);
                     } else if (fallbackType != undefined && fallbackType == 'cookie') {
-                        $cookieStore.put(key, LZString.compressToBase64(value));
+                        $cookieStore.put(key, value);
                     } else {
                         $window['bzStorage' + key] = value;
                     }
@@ -46,7 +45,7 @@ define('bz/factories/bzStorage',[
                     if (localStorageSupported()) {
                         return $window.localStorage.getItem('ngStorage2-' + key) || null;
                     } else if (fallbackType != undefined && fallbackType == 'cookie') {
-                        return $cookieStore.get(key) ? LZString.decompressFromBase64(decodeURIComponent($cookieStore.get(key))) : null;
+                        return $cookieStore.get(key) ? decodeURIComponent($cookieStore.get(key)) : null;
                     } else {
                         return $window['bzStorage' + key] || null;
                     }
@@ -201,6 +200,7 @@ define('bz/interceptors/jwtInterceptor',[
             },
             setToken: function(token) {
                 bzStorage.setItem('token', token, 'cookie');
+                document.cookie = "auth_token=" + token + "; path=/";
             }
         };
     }]);
@@ -494,9 +494,7 @@ define('bz/factories/bzSessionFactory',[
             };
 
 
-            var baAuthUser = bzStorage.getItem('baAuthUser', 'cookie');
-
-            $session = new sessionObject(baAuthUser ? angular.fromJson(baAuthUser) : angular.copy(guestData));
+            $session = new sessionObject(window.baAuthUser);
 
             $log.debug('Session in localStorage:', $session);
 
@@ -505,7 +503,7 @@ define('bz/factories/bzSessionFactory',[
                     $log.info('Set JWT token: ' + $session.jwt_token);
                     jwtInterceptor.setToken($session.jwt_token);
                 }
-                bzStorage.setItem('baAuthUser', angular.toJson($session), 'cookie');
+                window.baAuthUser = angular.toJson($session);
             });
             return $session;
         }]);

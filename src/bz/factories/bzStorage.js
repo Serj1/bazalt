@@ -1,7 +1,6 @@
 define([
-    'angular', 'bz/app',
-    'lz-string'
-], function (angular, app, LZString) {
+    'angular', 'bz/app'
+], function (angular, app) {
     'use strict';
 
     app.factory('bzStorage', ['$cookieStore', '$window',
@@ -21,7 +20,7 @@ define([
                     if (localStorageSupported()) {
                         $window.localStorage.setItem('ngStorage2-' + key, value);
                     } else if (fallbackType != undefined && fallbackType == 'cookie') {
-                        $cookieStore.put(key, LZString.compressToBase64(value));
+                        $cookieStore.put(key, value);
                     } else {
                         $window['bzStorage' + key] = value;
                     }
@@ -30,7 +29,7 @@ define([
                     if (localStorageSupported()) {
                         return $window.localStorage.getItem('ngStorage2-' + key) || null;
                     } else if (fallbackType != undefined && fallbackType == 'cookie') {
-                        return $cookieStore.get(key) ? LZString.decompressFromBase64(decodeURIComponent($cookieStore.get(key))) : null;
+                        return $cookieStore.get(key) ? decodeURIComponent($cookieStore.get(key)) : null;
                     } else {
                         return $window['bzStorage' + key] || null;
                     }

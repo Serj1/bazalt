@@ -28512,14 +28512,12 @@ define("angular-cookies", ["angular"], function(){});
 
 define("angular-route-segment", ["angular","angular-route"], function(){});
 
-var LZString=function(){function o(o,r){if(!t[o]){t[o]={};for(var n=0;n<o.length;n++)t[o][o[n]]=n}return t[o][r]}var r=String.fromCharCode,n="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",e="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$",t={},i={compressToBase64:function(o){if(null==o)return"";var r=i._compress(o,6,function(o){return n.charAt(o)});switch(r.length%4){default:case 0:return r;case 1:return r+"===";case 2:return r+"==";case 3:return r+"="}},decompressFromBase64:function(r){return null==r?"":""==r?null:i._decompress(r.length,32,function(e){return o(n,r.charAt(e))})},compressToUTF16:function(o){return null==o?"":i._compress(o,15,function(o){return r(o+32)})+" "},decompressFromUTF16:function(o){return null==o?"":""==o?null:i._decompress(o.length,16384,function(r){return o.charCodeAt(r)-32})},compressToUint8Array:function(o){for(var r=i.compress(o),n=new Uint8Array(2*r.length),e=0,t=r.length;t>e;e++){var s=r.charCodeAt(e);n[2*e]=s>>>8,n[2*e+1]=s%256}return n},decompressFromUint8Array:function(o){if(null===o||void 0===o)return i.decompress(o);for(var n=new Array(o.length/2),e=0,t=n.length;t>e;e++)n[e]=256*o[2*e]+o[2*e+1];var s=[];return n.forEach(function(o){s.push(r(o))}),i.decompress(s.join(""))},compressToEncodedURIComponent:function(o){return null==o?"":i._compress(o,6,function(o){return e.charAt(o)})},decompressFromEncodedURIComponent:function(r){return null==r?"":""==r?null:(r=r.replace(/ /g,"+"),i._decompress(r.length,32,function(n){return o(e,r.charAt(n))}))},compress:function(o){return i._compress(o,16,function(o){return r(o)})},_compress:function(o,r,n){if(null==o)return"";var e,t,i,s={},p={},u="",c="",a="",l=2,f=3,h=2,d=[],m=0,v=0;for(i=0;i<o.length;i+=1)if(u=o[i],Object.prototype.hasOwnProperty.call(s,u)||(s[u]=f++,p[u]=!0),c=a+u,Object.prototype.hasOwnProperty.call(s,c))a=c;else{if(Object.prototype.hasOwnProperty.call(p,a)){if(a.charCodeAt(0)<256){for(e=0;h>e;e++)m<<=1,v==r-1?(v=0,d.push(n(m)),m=0):v++;for(t=a.charCodeAt(0),e=0;8>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}else{for(t=1,e=0;h>e;e++)m=m<<1|t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t=0;for(t=a.charCodeAt(0),e=0;16>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}l--,0==l&&(l=Math.pow(2,h),h++),delete p[a]}else for(t=s[a],e=0;h>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;l--,0==l&&(l=Math.pow(2,h),h++),s[c]=f++,a=String(u)}if(""!==a){if(Object.prototype.hasOwnProperty.call(p,a)){if(a.charCodeAt(0)<256){for(e=0;h>e;e++)m<<=1,v==r-1?(v=0,d.push(n(m)),m=0):v++;for(t=a.charCodeAt(0),e=0;8>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}else{for(t=1,e=0;h>e;e++)m=m<<1|t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t=0;for(t=a.charCodeAt(0),e=0;16>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}l--,0==l&&(l=Math.pow(2,h),h++),delete p[a]}else for(t=s[a],e=0;h>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;l--,0==l&&(l=Math.pow(2,h),h++)}for(t=2,e=0;h>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;for(;;){if(m<<=1,v==r-1){d.push(n(m));break}v++}return d.join("")},decompress:function(o){return null==o?"":""==o?null:i._decompress(o.length,32768,function(r){return o.charCodeAt(r)})},_decompress:function(o,n,e){var t,i,s,p,u,c,a,l,f=[],h=4,d=4,m=3,v="",w=[],g={val:e(0),position:n,index:1};for(i=0;3>i;i+=1)f[i]=i;for(p=0,c=Math.pow(2,2),a=1;a!=c;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),p|=(u>0?1:0)*a,a<<=1;switch(t=p){case 0:for(p=0,c=Math.pow(2,8),a=1;a!=c;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),p|=(u>0?1:0)*a,a<<=1;l=r(p);break;case 1:for(p=0,c=Math.pow(2,16),a=1;a!=c;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),p|=(u>0?1:0)*a,a<<=1;l=r(p);break;case 2:return""}for(f[3]=l,s=l,w.push(l);;){if(g.index>o)return"";for(p=0,c=Math.pow(2,m),a=1;a!=c;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),p|=(u>0?1:0)*a,a<<=1;switch(l=p){case 0:for(p=0,c=Math.pow(2,8),a=1;a!=c;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),p|=(u>0?1:0)*a,a<<=1;f[d++]=r(p),l=d-1,h--;break;case 1:for(p=0,c=Math.pow(2,16),a=1;a!=c;)u=g.val&g.position,g.position>>=1,0==g.position&&(g.position=n,g.val=e(g.index++)),p|=(u>0?1:0)*a,a<<=1;f[d++]=r(p),l=d-1,h--;break;case 2:return w.join("")}if(0==h&&(h=Math.pow(2,m),m++),f[l])v=f[l];else{if(l!==d)return null;v=s+s[0]}w.push(v),f[d++]=s+v[0],h--,s=v,0==h&&(h=Math.pow(2,m),m++)}}};return i}();"function"==typeof define&&define.amd?define('lz-string',[],function(){return LZString}):"undefined"!=typeof module&&null!=module&&(module.exports=LZString);
-
 define('bz/app',[
     'angular',
 
     'angular-resource', 'angular-route', 'angular-cookies',
 
-    'angular-route-segment', 'lz-string'
+    'angular-route-segment'
 ], function(angular) {
     'use strict';
 
@@ -28531,9 +28529,8 @@ define('bz/app',[
 });
 
 define('bz/factories/bzStorage',[
-    'angular', 'bz/app',
-    'lz-string'
-], function (angular, app, LZString) {
+    'angular', 'bz/app'
+], function (angular, app) {
     'use strict';
 
     app.factory('bzStorage', ['$cookieStore', '$window',
@@ -28553,7 +28550,7 @@ define('bz/factories/bzStorage',[
                     if (localStorageSupported()) {
                         $window.localStorage.setItem('ngStorage2-' + key, value);
                     } else if (fallbackType != undefined && fallbackType == 'cookie') {
-                        $cookieStore.put(key, LZString.compressToBase64(value));
+                        $cookieStore.put(key, value);
                     } else {
                         $window['bzStorage' + key] = value;
                     }
@@ -28562,7 +28559,7 @@ define('bz/factories/bzStorage',[
                     if (localStorageSupported()) {
                         return $window.localStorage.getItem('ngStorage2-' + key) || null;
                     } else if (fallbackType != undefined && fallbackType == 'cookie') {
-                        return $cookieStore.get(key) ? LZString.decompressFromBase64(decodeURIComponent($cookieStore.get(key))) : null;
+                        return $cookieStore.get(key) ? decodeURIComponent($cookieStore.get(key)) : null;
                     } else {
                         return $window['bzStorage' + key] || null;
                     }
@@ -28717,6 +28714,7 @@ define('bz/interceptors/jwtInterceptor',[
             },
             setToken: function(token) {
                 bzStorage.setItem('token', token, 'cookie');
+                document.cookie = "auth_token=" + token + "; path=/";
             }
         };
     }]);
@@ -29010,9 +29008,7 @@ define('bz/factories/bzSessionFactory',[
             };
 
 
-            var baAuthUser = bzStorage.getItem('baAuthUser', 'cookie');
-
-            $session = new sessionObject(baAuthUser ? angular.fromJson(baAuthUser) : angular.copy(guestData));
+            $session = new sessionObject(window.baAuthUser);
 
             $log.debug('Session in localStorage:', $session);
 
@@ -29021,7 +29017,7 @@ define('bz/factories/bzSessionFactory',[
                     $log.info('Set JWT token: ' + $session.jwt_token);
                     jwtInterceptor.setToken($session.jwt_token);
                 }
-                bzStorage.setItem('baAuthUser', angular.toJson($session), 'cookie');
+                window.baAuthUser = angular.toJson($session);
             });
             return $session;
         }]);

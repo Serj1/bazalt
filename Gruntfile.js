@@ -7,7 +7,7 @@ module.exports = function(grunt) {
             cms: {
                 options: {
                     name: 'bz/run',
-                    exclude: ['angular', 'lz-string', 'angular-resource', 'angular-route', 'angular-cookies', 'angular-route-segment'],
+                    exclude: ['angular', 'angular-resource', 'angular-route', 'angular-cookies', 'angular-route-segment'],
                     out: 'build/bz-lite.src.js'
                 }
             },

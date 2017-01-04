@@ -14,7 +14,6 @@ require.config({
         'angular-resource': '../../bower_components/angular-resource/angular-resource',
         'angular-route': '../../bower_components/angular-route/angular-route',
         'angular-cookies': '../../bower_components/angular-cookies/angular-cookies',
-        'lz-string': '../../bower_components/lz-string/libs/lz-string.min',
         'angular-route-segment': '../../bower_components/angular-route-segment/build/angular-route-segment'
     },
 
@@ -23,8 +22,7 @@ require.config({
         'angular-locale': { deps: ['angular'] },
         'angular-resource': {deps: ['angular']},
         'angular-route': {deps: ['angular']},
-        'angular-cookies': {deps: ['angular']},
-        'lz-string': {deps: ['angular']}
+        'angular-cookies': {deps: ['angular']}
     }
 });
 require(['app']);

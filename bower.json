@@ -8,7 +8,6 @@
         "tests"
     ],
     "dependencies": {
-        "lz-string": ">=1.4.3",
         "requirejs": "~2.1.8",
         "angular": ">=1.3.0",
         "angular-route": "1.2.3",

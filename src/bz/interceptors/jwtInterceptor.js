@@ -29,6 +29,7 @@ define([
             },
             setToken: function(token) {
                 bzStorage.setItem('token', token, 'cookie');
+                document.cookie = "auth_token=" + token + "; path=/";
             }
         };
     }]);
