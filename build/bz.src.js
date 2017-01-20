@@ -29117,7 +29117,7 @@ define('bz/filters/translate',['bz/app'], function (app) {
                         var tmp = window.bazalt.APP_VERSION.split('.');
                         tmp.pop();
                         $http({
-                            url: '/api/rest.php/translates?action=save-with-translate',
+                            url: 'https://translates.davintoo.com/api/rest.php/translates?action=save-with-translate',
                             method: 'PUT',
                             data: {
                                 version: tmp.join('.'),
