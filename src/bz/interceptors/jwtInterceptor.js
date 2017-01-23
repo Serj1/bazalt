@@ -13,7 +13,7 @@ define([
                     config.headers.Authorization = 'Bearer ' + token;
                 }
                 var browserId = bzStorage.getItem('browserId', 'cookie');
-                if(browserId) {
+                if (browserId) {
                     config.headers['X-Browser-Id'] = browserId;
                 }
                 return config;
@@ -24,12 +24,19 @@ define([
                 }
                 return response || $q.when(response);
             },
-            getToken: function() {
+            getToken: function () {
                 return bzStorage.getItem('token', 'cookie');
             },
-            setToken: function(token) {
+            setToken: function (token) {
                 bzStorage.setItem('token', token, 'cookie');
-                document.cookie = "auth_token=" + token + "; path=/";
+                var domain = window.bazalt.cookieDomain || window.location.hostname;
+                var isSecure = window.location.protocol == 'https:';
+                document.cookie = [
+                    'auth_token=' + token,
+                    'path=/',
+                    'domain=' + domain,
+                    (isSecure ? 'secure=true' : '')
+                ].join('; ');
             }
         };
     }]);
